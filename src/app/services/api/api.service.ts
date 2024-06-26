@@ -11,13 +11,13 @@ export class ApiService {
     private http: HttpClient
   ) {}
 
-  getPredictions(cryptoId: string) {
-    const url = `${this.apiUrl}/predict/${cryptoId}`;
+  getPredictions(cryptoId: string, periodo: any) {
+    const url = `${this.apiUrl}/predict/${cryptoId}/${periodo}`;
     return this.http.get<any>(url);
   }
 
-  getPrediction(cryptoId: string){
-    const url = `${this.apiUrl}/predict_change/${cryptoId}`;
+  getPrediction(cryptoId: string, periodo: any){
+    const url = `${this.apiUrl}/predict_change/${cryptoId}/${periodo}`;
     return this.http.get<any>(url);
   }
 }

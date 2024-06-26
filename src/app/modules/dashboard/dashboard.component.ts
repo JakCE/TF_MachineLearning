@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiDataListWrapperModule, TuiInputModule, TuiSelectModule } from '@taiga-ui/kit';
+import { TuiDataListWrapperModule, TuiInputModule, TuiInputNumberModule, TuiSelectModule } from '@taiga-ui/kit';
 import { TuiInputPasswordModule } from '@taiga-ui/kit';
 import { Router, RouterLink } from '@angular/router';
 import { TuiAlertService, TuiButtonModule, TuiDataListModule, TuiLoaderModule, TuiModeModule, TuiNotificationModule } from '@taiga-ui/core';
@@ -17,7 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
     TuiDataListModule,
     TuiDataListWrapperModule,
     HttpClientModule,
-    TuiLoaderModule
+    TuiLoaderModule,
+    TuiInputNumberModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -54,11 +55,13 @@ export class DashboardComponent implements OnInit{
 
   onSelect(){
     //console.log(this.dashForm.value.idCripto);
+    this.cryptoId = this.dashForm.value.idCripto;
+    console.log(this.cryptoId);
   }
 
   onClick(){
     this.loader = true;
-    this.apiService.getPrediction(this.dashForm.value.idCripto).subscribe(data => {
+    /*this.apiService.getPrediction(this.dashForm.value.idCripto, this.dashForm.value.periodosCripto).subscribe(data => {
       this.resumen = data;
       this.precio_change = parseFloat(data.percentage_change.toFixed(2));
       this.precio_predict = data.first_predicted_price;
@@ -68,11 +71,22 @@ export class DashboardComponent implements OnInit{
     }, error => {
       console.error('Error fetching predictions', error);
       this.loader = false;
-    });
+    });*/
 
-    this.apiService.getPredictions(this.dashForm.value.idCripto).subscribe(data=>{
-      //this.createPlot(data);
-      data.future_y = data.future_y.map((val: any) => val[0]);
+    this.apiService.getPredictions(this.dashForm.value.idCripto, this.dashForm.value.periodosCripto).subscribe(data=>{
+      this.resumen = data;
+      this.precio_change_last = parseFloat(data.percentage_change_last_day.toFixed(2));
+      this.precio_change_first = parseFloat(data.percentage_change_first_day.toFixed(2));
+      this.precio_predict = data.first_predicted_price;
+      this.precio_ult_real = data.last_real_price;
+      this.precio_predict_last = data.last_predicted_price;
+      this.precisionModel = data.test_rmse;
+      this.MaxDate = data.max_date;
+      this.minDate = data.min_date;
+      this.maxValue = data.max_value;
+      this.minValue = data.min_value;
+      this.loader = false;
+      //data.future_y = data.future_y.map((val: any) => val[0]);
       this.createPlotejm(data);
       //this.createFuturePlot(data);
       console.log(data);
@@ -81,6 +95,16 @@ export class DashboardComponent implements OnInit{
       this.loader = false;
     });
   }
+  precio_change_last: any;
+  precio_change_first: any;
+  precio_predict_last: any;
+  precisionModel: any;
+  per_change_first_day: any;
+  per_change_last_day: any;
+  maxValue: any;
+  minValue: any;
+  MaxDate: any;
+  minDate: any;
 
   //////
 
@@ -103,14 +127,14 @@ export class DashboardComponent implements OnInit{
   createPlotejm(dataVal: any) {
     const data = [
       {
-        x: dataVal.future_real_x,
-        y: dataVal.future_real_y,
+        x: dataVal.real_dates,
+        y: dataVal.real_prices,
         type: 'scatter',
         name: 'Precio Real'
       },
       {
-        x: dataVal.future_x,
-        y: dataVal.future_y,
+        x: dataVal.future_dates,
+        y: dataVal.future_prices,
         type: 'scatter',
         name: 'Predicción Futura'
       }

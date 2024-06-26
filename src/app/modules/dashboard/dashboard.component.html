@@ -12,13 +12,16 @@
                   [items]="items"
                 ></tui-data-list-wrapper>
             </tui-select>
-            <tui-select formControlName="periodosCripto" tuiMode="onLight">
-                Ingrese el periodo de predicción
+            <!-- <tui-select formControlName="periodosCripto" tuiMode="onLight">
+                Ingrese el periodo de predicción en dias
                 <tui-data-list-wrapper
                   *tuiDataList
                   [items]="periodos"
                 ></tui-data-list-wrapper>
-            </tui-select>
+            </tui-select> -->
+            <tui-input-number formControlName="periodosCripto" tuiMode="onLight">
+                Ingrese el periodo de predicción en dias
+            </tui-input-number>
         </div>
         <!-- <small>¿No tienes una cuenta? Registrate <a class="underline" routerLink='/register'>aquí</a></small> -->
         <button class="mt-5 w-60 p-2 font-bold rounded-lg" (click)="onClick()">Predecir</button>
@@ -32,10 +35,15 @@
             <h1 class="text-center underline my-10">Resultados</h1>
             <p class="my-2"><b>Último precio real:</b> {{ precio_ult_real }}</p>
             <p class="my-2"><b>Primer precio predecido:</b> {{ precio_predict }}</p>
-            <div class="flex m-5">
+            <!-- <div class="flex m-5">
             <h1 class="text-3xl mr-3"><b>{{ precio_change ? precio_change + ' %' : '0.00 %' }}</b></h1>
             <p class="my-2">de cambio entre el último día de datos y el primer día de predicción para <b class="font-extrabold">{{ cryptoId }}</b></p>
-            </div>
+            </div> -->
+            <p class="my-2">Precisión del modelo (RMSE) en datos de prueba para {{cryptoId}}: {{precisionModel}}</p>
+            <p class="my-2">El porcentaje de cambio entre el último día de datos y el primer día de predicción para {{cryptoId}} es: {{precio_change_first}}%</p>
+            <p class="my-2">El porcentaje de cambio entre el último día de datos y el último día de predicción para {{cryptoId}} es: {{precio_change_last}}%</p>
+            <p class="my-2">El valor más alto predicho para {{cryptoId}} es {{maxValue}} USD en la fecha {{MaxDate}}</p>
+            <p class="my-2">El valor más bajo predicho para {{cryptoId}} es {{minValue}} USD en la fecha {{minDate}}</p>
         </div>
     </div>
 </div>
