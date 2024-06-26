@@ -1,0 +1,47 @@
+<div class="app-login w-full flex items-start justify-center" style="height: 100vh;">
+    <div class="contenido-login flex flex-col items-center justify-center">
+        <div class="titulo-login w-full text-center pb-5">
+            <h2 class="pb-5 pt-5">Trabajo final</h2>
+            <h1 class="pb-5">Machine Learning</h1>
+        </div>
+        <div class="form-login w-72 pb-10 flex flex-col justify-center gap-5" [formGroup]="dashForm">
+            <tui-select formControlName="idCripto" tuiMode="onLight" (ngModelChange)="onSelect()">
+                Seleccione la criptomoneda
+                <tui-data-list-wrapper
+                  *tuiDataList
+                  [items]="items"
+                ></tui-data-list-wrapper>
+            </tui-select>
+            <tui-select formControlName="periodosCripto" tuiMode="onLight">
+                Ingrese el periodo de predicción
+                <tui-data-list-wrapper
+                  *tuiDataList
+                  [items]="periodos"
+                ></tui-data-list-wrapper>
+            </tui-select>
+        </div>
+        <!-- <small>¿No tienes una cuenta? Registrate <a class="underline" routerLink='/register'>aquí</a></small> -->
+        <button class="mt-5 w-60 p-2 font-bold rounded-lg" (click)="onClick()">Predecir</button>
+    </div>
+    <div class="logo-first w-full flex flex-col items-start justify-center overflow-auto">
+        <div class="w-full flex flex-col items-start justify-center">
+            <div id="plot"></div>
+            <!-- <div id="futurePlot"></div> -->
+        </div>
+        <div class="px-10">
+            <h1 class="text-center underline my-10">Resultados</h1>
+            <p class="my-2"><b>Último precio real:</b> {{ precio_ult_real }}</p>
+            <p class="my-2"><b>Primer precio predecido:</b> {{ precio_predict }}</p>
+            <div class="flex m-5">
+            <h1 class="text-3xl mr-3"><b>{{ precio_change ? precio_change + ' %' : '0.00 %' }}</b></h1>
+            <p class="my-2">de cambio entre el último día de datos y el primer día de predicción para <b class="font-extrabold">{{ cryptoId }}</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(loader){
+    <div class="loader-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-black bg-opacity-20">
+        <tui-loader class="w-full" [showLoader]="true" [overlay]="true" [inheritColor]="true"></tui-loader>
+    </div>
+}
